@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.test.mapper.SectionMapper">
+  <resultMap id="BaseResultMap" type="com.ssm.test.domain.Section">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="bookId" jdbcType="INTEGER" property="bookid" />
+    <result column="sectionNum" jdbcType="INTEGER" property="sectionnum" />
+    <result column="sectionTitle" jdbcType="VARCHAR" property="sectiontitle" />
+    <result column="sectionPrice" jdbcType="DECIMAL" property="sectionprice" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, bookId, sectionNum, sectionTitle, sectionPrice
+  </sql>
+
+  <!--根据用户id查询章节-->
+  <select id="selectByBookId" parameterType="java.lang.Integer" resultType="section">
+         SELECT
+         <include refid="Base_Column_List" />
+         FROM section WHERE bookId=#{bookId}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from section
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from section
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ssm.test.domain.Section">
+    insert into section (id, bookId, sectionNum, 
+      sectionTitle, sectionPrice)
+    values (#{id,jdbcType=INTEGER}, #{bookid,jdbcType=INTEGER}, #{sectionnum,jdbcType=INTEGER}, 
+      #{sectiontitle,jdbcType=VARCHAR}, #{sectionprice,jdbcType=DECIMAL})
+  </insert>
+  <!--插入章节，num根据书的章节数添加-->
+  <insert id="insertSec" parameterType="section">
+      <!--
+      LAST_INSERT_ID() 得到insert进的主键，返回给对象，只适用于自增主键
+      keyProperty将查询到的主键值设置到parameterType设定的那个属性
+      order：是执行顺序，相对于select
+                      -->
+      <selectKey keyProperty="id" keyColumn="AFTER" resultType="java.lang.Integer">
+        SELECT LAST_INSERT_ID()
+      </selectKey>
+     insert into section (id, bookId, sectionNum,
+      sectionTitle, sectionPrice)
+    values (#{id,jdbcType=INTEGER}, #{bookid,jdbcType=INTEGER},
+     (select a.he from (SELECT COUNT(*)+1 he FROM section WHERE bookId=#{bookid,jdbcType=INTEGER}) a),
+      #{sectiontitle,jdbcType=VARCHAR}, #{sectionprice,jdbcType=DECIMAL})
+  </insert>
+  <!--查询章节-->
+  <select id="selectSecByBook" parameterType="section" resultType="com.ssm.test.domain.SecExam" >
+     select s.*,b.bookName bookName,b.bookNum bookNum,b.bookUrl bookUrl
+     from section s,book b
+     where s.sectionNum=#{sectionnum} and s.bookId=#{bookid} and s.bookId=b.id
+  </select>
+  <insert id="insertSelective" parameterType="com.ssm.test.domain.Section">
+    insert into section
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bookid != null">
+        bookId,
+      </if>
+      <if test="sectionnum != null">
+        sectionNum,
+      </if>
+      <if test="sectiontitle != null">
+        sectionTitle,
+      </if>
+      <if test="sectionprice != null">
+        sectionPrice,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bookid != null">
+        #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="sectionnum != null">
+        #{sectionnum,jdbcType=INTEGER},
+      </if>
+      <if test="sectiontitle != null">
+        #{sectiontitle,jdbcType=VARCHAR},
+      </if>
+      <if test="sectionprice != null">
+        #{sectionprice,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ssm.test.domain.Section">
+    update section
+    <set>
+      <if test="bookid != null">
+        bookId = #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="sectionnum != null">
+        sectionNum = #{sectionnum,jdbcType=INTEGER},
+      </if>
+      <if test="sectiontitle != null">
+        sectionTitle = #{sectiontitle,jdbcType=VARCHAR},
+      </if>
+      <if test="sectionprice != null">
+        sectionPrice = #{sectionprice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ssm.test.domain.Section">
+    update section
+    set bookId = #{bookid,jdbcType=INTEGER},
+      sectionNum = #{sectionnum,jdbcType=INTEGER},
+      sectionTitle = #{sectiontitle,jdbcType=VARCHAR},
+      sectionPrice = #{sectionprice,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,59 @@
+body{
+	margin:0px;
+	font-size:12px;
+	text-align:center;    
+        font-family:微软雅黑，华文雅黑，华文仿宋，华文中宋;
+}
+
+#container{
+	position:relative;     /*相对定位*/
+	width:1024px;         /*宽*/
+	background-color：#ffa07a;
+	margin:0 auto;
+}
+
+#d{
+width:240px;
+height：0 auto;
+border:5px solid #d0d0d0;
+padding:10px;
+margin:5px;
+float:left;
+
+}
+#c{
+width:100%;
+height:0 auto;
+float:left;
+border:none;
+padding:10px;
+margin:0px auto;
+}
+#e{
+width:140px;
+height:0px auto;
+border-style:none;
+float:left;
+}
+h2{
+text-align:left;
+color:black;
+}
+h4{
+texte-align:center;
+color:blue;
+}
+.m{font-size:12px;font-family:微软雅黑;line-height:20px;text-indent:2em;text-align:justify;}
+ .l{
+    font-size:25px;
+    font-family:微软雅黑;
+    line-height:30px;
+    text-indent:2em;
+    text-align:justify;
+   }
+.haha{
+ font-family:微软雅黑,幼园;
+ font-size:1em;
+ color:#00f;
+text-align:left;
+}

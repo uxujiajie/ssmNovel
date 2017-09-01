@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<!-- 引入属性文件 -->
+	<!--<properties  resource="jdbc.properties" />-->
+	
+	<!-- 定义运行参数 -->
+	<settings>
+		<setting name="logImpl" value="LOG4J"/>
+		 <!--延迟加载的全局开关。当开启时，所有关联对象都会延迟加载。 特定关联关系中可通过设置fetchType属性来覆盖该项的开关状态。默认值false  -->  
+      	<setting name="lazyLoadingEnabled" value="true"/>
+      	<!-- 设置为true时,懒加载的对象可能被任何懒加载属性全部加载,否则,每个属性按需加载 -->
+      	<setting name="aggressiveLazyLoading" value="false"/>
+      	<!-- 此配置文件下所有cache进行全局性开关  -->
+      	<setting name="cacheEnabled" value="true"/>
+	</settings>
+	
+	<!-- 别名定义 -->
+	<typeAliases>
+		<!-- type类型  alias别名 -->
+	    <!-- <typeAlias type="cn.xiuli.domain.User" alias="user" /> -->
+		<!-- 批量重命名 指定包名, mybatis自定扫描po类,自动定义别名，为类名(首字母大写或小写) -->
+		<package name="com.ssm.test.domain"/>
+	</typeAliases>
+	
+	<!--<environments default="development">
+	
+		<environment id="development">
+			&lt;!&ndash; 使用jdbc管理事务 &ndash;&gt;
+			<transactionManager type="JDBC" />
+			
+			&lt;!&ndash; 数据连接池 &ndash;&gt;
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driverClass}"/>
+				<property name="url" value="${jdbc.url}"/>
+				<property name="username" value="${jdbc.username}"/>
+				<property name="password" value="${jdbc.password}"/>
+			</dataSource>
+			
+		</environment>
+			
+	</environments>-->
+	
+	<!-- 映射配置 -->
+	<mappers>
+		<!-- <mapper resource="cn/xiuli/mapper/UserMapper.xml" />
+	    <mapper resource="cn/xiuli/mapper/ProductMapper.xml"/> -->
+	    <package name="com.ssm.test.mapper"/>
+	</mappers>
+</configuration>

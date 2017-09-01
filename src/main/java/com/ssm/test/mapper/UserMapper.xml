@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.test.mapper.UserMapper">
+    <!--user扩展类-->
+    <resultMap id="userQueryExam" type="com.ssm.test.domain.UserExam">
+        <id property="id" javaType="java.lang.Integer" column="id" />
+        <id property="userName" javaType="java.lang.String" column="userName"/>
+        <id property="userPass" javaType="java.lang.String" column="userPass"/>
+        <id property="userPick" javaType="java.lang.String" column="userPick"/>
+        <id property="userEmail" javaType="java.lang.String" column="userEmail"/>
+        <id property="userBalance" javaType="java.math.BigDecimal" column="userBalance"/>
+        <id property="userRole" javaType="java.lang.Integer" column="userRole"/>
+        <id property="userAcode" javaType="java.lang.String" column="userAcode"/>
+        <id property="userTel" javaType="java.lang.String" column="userTel"/>
+        <id property="userState" javaType="java.lang.Integer" column="userState"/>
+        <collection property="bookList"  ofType="book">
+            <id column="bookId" jdbcType="INTEGER" property="id" />
+            <result column="bookName" jdbcType="VARCHAR" property="bookname" />
+            <result column="bookNum" jdbcType="INTEGER" property="booknum" />
+            <result column="author" jdbcType="VARCHAR" property="author" />
+            <result column="intro" jdbcType="VARCHAR" property="intro" />
+            <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+        </collection>
+    </resultMap>
+    <sql id="user_update_info" >
+          <if test="userPass != NULL and userPass != ''">
+              userPass=#{userPass}
+          </if>
+          <if test="userBalance != NULL and userBalance != ''">
+              userBalance=#{userBalance}
+          </if>
+    </sql>
+    <sql id="user_select">
+        <if test="id != null">
+            id=#{id}
+        </if>
+        <if test="userName != null and userName != ''">
+            userName=#{userName}
+        </if>
+
+    </sql>
+
+    <!--添加用户-->
+    <insert id="insertUser" parameterType="user" >
+        INSERT INTO USER(userName,userPass,userPick,userEmail,userBalance,userRole,userAcode,userTel,userState)
+        values(#{userName},#{userPass},#{userPick},#{userEmail},#{userBalance},#{userRole},#{userAcode},#{userTel},#{userState})
+    </insert>
+    <!--更新用户状态-->
+    <update id="updateUserState" parameterType="java.lang.String">
+        update USER SET userState=1
+        WHERE userAcode=#{userAcode}
+    </update>
+    <!--更新用户信息-->
+    <update id="updateUser" parameterType="user">
+        UPDATE USER SET
+            <include refid="user_update_info"></include>
+        WHERE id=#{id}
+    </update>
+
+    <!--查询用户-->
+    <select id="selectUser" parameterType="user" resultType="user">
+        SELECT * from user
+        <where>
+            <include refid="user_select"></include>
+        </where>
+
+    </select>
+
+    <!--查询用户和书架-->
+    <select id="selectUserAndBook" parameterType="user" resultMap="userQueryExam">
+        select u.*,book.id bookId,book.bookName bookName,book.bookNum bookNum,
+        book.author author,book.intro intro,book.updateTime updateTime
+        from user u
+        left join bookrack br
+        on u.`id`=br.`userId`
+        left join book
+        on  bookId=book.`id`
+        <where>
+            <include refid="user_select"></include>
+        </where>
+    </select>
+
+    <!--删除书架-->
+    <delete id="deleteRacks" >
+        DELETE FROM bookrack WHERE userId=#{userId} AND bookId IN
+        <foreach collection="array" item="i" separator="," open="(" close=")">
+            #{i}
+        </foreach>
+    </delete>
+</mapper>
